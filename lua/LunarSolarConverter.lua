@@ -45,7 +45,7 @@ local solar_1_1 = {
     0x107444, 0x107638, 0x10784c, 0x107a3f, 0x107c53, 0x107e48
 }
 
-function GetBitInt(data, length, shift)
+local function GetBitInt(data, length, shift)
     return bit32.rshift(
                 bit32.band(data,
                            bit32.lshift((bit32.lshift(1,length) - 1),shift)),
@@ -53,13 +53,13 @@ function GetBitInt(data, length, shift)
 end
 
 -- //WARNING: Dates before Oct. 1582 are inaccurate
-function SolarToInt(y, m, d)
+local function SolarToInt(y, m, d)
     m = (m + 9) % 12
     y = y - math.floor(m / 10)
     return 365 * y + math.floor(y / 4) - math.floor(y / 100) + math.floor(y / 400) + math.floor((m * 306 + 5) / 10) + (d - 1)
 end
 
-function SolarFromInt(g)
+local function SolarFromInt(g)
     local y = math.floor((10000 * g + 14780) / 3652425)
     local ddd = g - (365 * y + math.floor(y / 4) - math.floor(y / 100) + math.floor(y / 400))
     if ddd < 0 then
@@ -150,6 +150,8 @@ function SolarToLunar(solar)
     return lunar
 end
 
+--[[
+--test
 local cDayName = {
     "初一","初二","初三","初四","初五",
     "初六","初七","初八","初九","初十",
@@ -161,15 +163,16 @@ local cDayName = {
 
 local cMonName = {"正","二","三","四","五","六", "七","八","九","十","十一","腊"}
 
--- test
-function printLunar(lunar)
+local function printLunar(lunar)
     print("农历"..lunar.year.."年"..cMonName[lunar.month].."月"..cDayName[lunar.day]..(lunar.isleap and "(闰)" or ""))
 end
 
-function printSolar(solar)
+local function printSolar(solar)
     print("公历"..solar.year.."年"..solar.month.."月"..solar.day.."日")
 end
 
-printLunar(SolarToLunar({year=1979,month=8,day=3}))
+printLunar(SolarToLunar({year=1979,month=3,day=11}))
+printSolar(LunarToSolar({year=1979,month=3,day=11}))
+printSolar(LunarToSolar({year=1979,month=6,day=11,isleap=true}))
 
-printSolar(LunarToSolar({year=1979,month=6,day=11,isleap=false}))
+]]
